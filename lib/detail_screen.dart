@@ -184,7 +184,7 @@ Padding(
                          padding: const EdgeInsets.all(8.0),
                          child: Container(
                           height: 80,
-                          width: 300,
+                          width: 340,
                            decoration: BoxDecoration(
     color: Color(0xFFDCE5F9),
     borderRadius: BorderRadius.all(Radius.circular(10))
@@ -212,13 +212,13 @@ Padding(
                        ),
                         // Save the reading button
                                                 Padding(
-                        padding: const EdgeInsets.only(left: 20, top: 10),
+                        padding: const EdgeInsets.only(top: 10),
                         child: ElevatedButton(
                           style: ButtonStyle(
                             minimumSize: MaterialStateProperty.all<Size>(
-                                Size(322, 48)),
+                                Size(300, 48)),
                             backgroundColor: MaterialStateProperty.all<Color>(
-                                const Color.fromARGB(255, 26, 206, 142)),
+                                const Color(0xFF6C63FF)),
                           ),
                           onPressed: () async {
                                 saveReading(_listRecogTexts!.join("\n"));
