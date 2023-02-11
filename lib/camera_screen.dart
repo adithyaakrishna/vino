@@ -78,15 +78,16 @@ class _CameraScreenState extends State<CameraScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
+        automaticallyImplyLeading: false,
         backgroundColor: Colors.white,
         elevation: 2.0,
         title:      
-      Text('NSMV TextRecog', textAlign: TextAlign.center, style: TextStyle(
+      Text('NSMV OdoRecog', textAlign: TextAlign.center, style: TextStyle(
         color: Color.fromRGBO(42, 47, 45, 1),
         fontFamily: 'Poppins',
         fontSize: 16,
         letterSpacing: 1,
-        fontWeight: FontWeight.normal,
+        fontWeight: FontWeight.bold,
         height: 1
       ),),
               centerTitle: true,
@@ -95,16 +96,16 @@ class _CameraScreenState extends State<CameraScreen> {
           ? Column(
               children: <Widget>[
                 Padding(
-                  padding: const EdgeInsets.all(30.0),
+                  padding: const EdgeInsets.all(20.0),
                   child: Container(
-                    height: 467,
-                    width: 365,
+                    height: 500,
+                    width: 360,
         child: _controller != null
             ? ClipRRect(
-                borderRadius: BorderRadius.circular(50.0),
+                borderRadius: BorderRadius.circular(30.0),
                 child: Container(
                   decoration: BoxDecoration(
-                    color: Colors.black,
+                    color: Color(0xFF6C63FF),
                   ),
                   child: AspectRatio(
                     aspectRatio: _controller.value.aspectRatio,
@@ -119,30 +120,6 @@ class _CameraScreenState extends State<CameraScreen> {
                 child: Row(
   mainAxisAlignment: MainAxisAlignment.spaceEvenly,
   children: <Widget>[
-    RawMaterialButton(
-      onPressed: () async{
-          // Handle camera button press
-          await _takePicture().then((String? path) {
-                          if (path != null) {
-                            Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                builder: (context) => DetailScreen(
-                                  imagePath: path,
-                                ),
-                              ),
-                            );
-                          } else {
-                            print('Image path not found!');
-                          }
-                        });
-      },
-      child: Icon(Icons.camera_alt, color: Colors.white),
-      shape: CircleBorder(),
-      fillColor: Color(0xFF6C63FF),
-      elevation: 6.0,
-      padding: EdgeInsets.all(15.0),
-    ),
     RawMaterialButton(
       onPressed: () async{
           // Handle gallery button press
@@ -164,6 +141,30 @@ class _CameraScreenState extends State<CameraScreen> {
 
       },
       child: Icon(Icons.photo_library, color: Colors.white),
+      shape: CircleBorder(),
+      fillColor: Color(0xFF6C63FF),
+      elevation: 6.0,
+      padding: EdgeInsets.all(15.0),
+    ),
+    RawMaterialButton(
+      onPressed: () async{
+          // Handle camera button press
+          await _takePicture().then((String? path) {
+                          if (path != null) {
+                            Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                builder: (context) => DetailScreen(
+                                  imagePath: path,
+                                ),
+                              ),
+                            );
+                          } else {
+                            print('Image path not found!');
+                          }
+                        });
+      },
+      child: Icon(Icons.camera_alt, color: Colors.white),
       shape: CircleBorder(),
       fillColor: Color(0xFF6C63FF),
       elevation: 6.0,

@@ -23,7 +23,7 @@ class _DetailScreenState extends State<DetailScreen> {
   Size? _imageSize;
   List<TextElement> _elements = [];
 
-  List<String>? _listEmailStrings;
+  List<String>? _listRecogTexts;
 
   // Fetching the image size from the image file
   Future<void> _getImageSize(File imageFile) async {
@@ -74,10 +74,11 @@ class _DetailScreenState extends State<DetailScreen> {
       for (TextLine line in block.textLines) {
         print('text: ${line.lineText}');
           if (regEx5.hasMatch(line.lineText) ||
-            regEx4.hasMatch(line.lineText) ||
-            regEx.hasMatch(line.lineText) ||
-            regEx2.hasMatch(line.lineText) ||
-            regEx3.hasMatch(line.lineText)) {
+              // regEx4.hasMatch(line.lineText) ||
+              // regEx3.hasMatch(line.lineText) ||
+              regEx.hasMatch(line.lineText) ||
+            regEx2.hasMatch(line.lineText)
+          ) {
             textStrings.add(line.lineText);
           for (TextElement element in line.textElements) {
             _elements.add(element);
@@ -87,7 +88,7 @@ class _DetailScreenState extends State<DetailScreen> {
     }
 
     setState(() {
-      _listEmailStrings = textStrings;
+      _listRecogTexts = textStrings;
     });
   }
 
@@ -122,6 +123,9 @@ class _DetailScreenState extends State<DetailScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
+        iconTheme: IconThemeData(
+          color: Colors.black, // <-- SEE HERE
+        ),
         backgroundColor: Colors.white,
         elevation: 2.0,
         title:      
@@ -130,7 +134,7 @@ class _DetailScreenState extends State<DetailScreen> {
         fontFamily: 'Poppins',
         fontSize: 16,
         letterSpacing: 1,
-        fontWeight: FontWeight.normal,
+        fontWeight: FontWeight.bold,
         height: 1
       ),),
               centerTitle: true,
@@ -171,16 +175,16 @@ Padding(
                           child: Text(
                             "Identified text",
                             style: TextStyle(
-                              fontSize: 16,
-                              fontWeight: FontWeight.bold,
+                              fontSize: 18,
+                              fontWeight: FontWeight.w800,
                             ),
                           ),
                         ),
                        Padding(
                          padding: const EdgeInsets.all(8.0),
                          child: Container(
-                          height: 130,
-                          width: 400,
+                          height: 80,
+                          width: 300,
                            decoration: BoxDecoration(
     color: Color(0xFFDCE5F9),
     borderRadius: BorderRadius.all(Radius.circular(10))
@@ -192,11 +196,11 @@ Padding(
               child: SizedBox(
                 height: 100.0,
                 child: SingleChildScrollView(
-                  child: _listEmailStrings != null?ListView.builder(
+                  child: _listRecogTexts != null?ListView.builder(
                     shrinkWrap: true,
-                    itemCount: _listEmailStrings!.length,
+                    itemCount: _listRecogTexts!.length,
                     itemBuilder: (context, index) {
-                      return Text(_listEmailStrings![index]);
+                      return Text(_listRecogTexts![index]);
                     },
                   ):Container(),
                 ),
@@ -217,7 +221,7 @@ Padding(
                                 const Color.fromARGB(255, 26, 206, 142)),
                           ),
                           onPressed: () async {
-                                saveReading(_listEmailStrings!.join("\n"));
+                                saveReading(_listRecogTexts!.join("\n"));
                                 Navigator.push(
                               context,
                               MaterialPageRoute(

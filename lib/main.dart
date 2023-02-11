@@ -2,8 +2,6 @@ import 'package:camera/camera.dart';
 import 'package:flutter/material.dart';
 import 'package:nsmvision_odovinrecog/splash_screen.dart';
 
-import 'camera_screen.dart';
-
 // Global variable for storing the list of cameras available
 List<CameraDescription> cameras = [];
 
@@ -22,7 +20,7 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      title: 'NSMV TextRecog',
+      title: 'NSMV OdoRecog',
       theme: ThemeData(
         primarySwatch: Colors.blue,
       ),

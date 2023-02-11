@@ -31,6 +31,8 @@ class _ReadingHistoryPageState extends State<ReadingHistoryPage> {
             return a.dateTime.compareTo(b.dateTime);
           case SortCriteria.reading:
             return a.reading.compareTo(b.reading);
+          case SortCriteria.time:
+            return a.reading.compareTo(b.time);
         }
       });
     });
@@ -40,6 +42,9 @@ class _ReadingHistoryPageState extends State<ReadingHistoryPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
+        iconTheme: IconThemeData(
+          color: Colors.black, // <-- SEE HERE
+        ),
        backgroundColor: Colors.white,
         elevation: 2.0,
         title:      
@@ -48,7 +53,7 @@ class _ReadingHistoryPageState extends State<ReadingHistoryPage> {
         fontFamily: 'Poppins',
         fontSize: 16,
         letterSpacing: 1,
-        fontWeight: FontWeight.normal,
+        fontWeight: FontWeight.bold,
         height: 1
       ),),
               centerTitle: true,
@@ -63,6 +68,10 @@ class _ReadingHistoryPageState extends State<ReadingHistoryPage> {
               PopupMenuItem(
                 child: Text("Sort by Reading"),
                 value: SortCriteria.reading,
+              ),
+              PopupMenuItem(
+                child: Text("Sort by Time"),
+                value: SortCriteria.time,
               ),
             ],
           )
@@ -94,7 +103,7 @@ class _ReadingHistoryPageState extends State<ReadingHistoryPage> {
   }
 }
 
-enum SortCriteria { date, reading }
+enum SortCriteria { date, reading, time }
 
 class Reading {
   final DateTime dateTime;

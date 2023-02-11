@@ -31,7 +31,8 @@ Navigator.push(
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: Color(0xFFDCE5F9),
-      body: Center(
+      body: Container(
+        alignment: Alignment.centerRight,
         child: FadeTransition(
           opacity: _animation,
           child: Image.asset('assets/SplashScreen.png'),
