@@ -54,43 +54,37 @@ class _DetailScreenState extends State<DetailScreen> {
 
     // Creating an InputImage object using the image path
     final inputImage = InputImage.fromFilePath(_imagePath);
-    // Retrieving the RecognisedText from the InputImage
-    final text = await _textDetector.processImage(inputImage);
 
-    // Pattern of RegExp for matching a general VIN Number
-    String odoPattern = r"/\b\d{6}\b/g";
-    String odoPattern2 = r"^[0-9]{5,6}$";
-    RegExp regEx4 = RegExp(odoPattern);
-    RegExp regEx5 = RegExp(odoPattern2);
+// Retrieving the RecognisedText from the InputImage
+final text = await _textDetector.processImage(inputImage);
 
-    List<String> textStrings = [];
-    
+// Pattern of RegExp for matching an odometer reading
+String odoPattern = r"\d{1,7}(?:\.\d{1,2})";
+RegExp regEx = RegExp(odoPattern);
 
-    List<String> emailStrings = [];
+// Initialize a variable to store the detected odometer reading
+String? odometerReading;
 
-      
-
-
-    // Finding and storing the text String(s) and the TextElement(s)
-    for (TextBlock block in text.textBlocks) {
-      for (TextLine line in block.textLines) {  
-        print('text: ${line.lineText}');
-         textStrings.add(line.lineText);
-          for (TextElement element in line.textElements) {
-            _elements.add(element);
-            if(regEx5.hasMatch(element.getText) || regEx4.hasMatch(element.getText)){
-              _elementsTag.add("odo");
-            }
-            else{
-              _elementsTag.add("Normal");
-            }
-        }
-      }
+// Find and store the first matched odometer reading
+for (TextBlock block in text.textBlocks) {
+  for (TextLine line in block.textLines) {  
+    String lineText = line.lineText.trim();
+    print(lineText);
+    if (regEx.hasMatch(lineText)) {
+      RegExpMatch? match = regEx.firstMatch(lineText);
+      odometerReading = match?.group(0)!;
+      break;
     }
+  }
+  if (odometerReading != null) {
+    break;
+  }
+}
 
-    setState(() {
-      _listRecogTexts = textStrings;
-    });
+setState(() {
+  _listRecogTexts = [odometerReading ?? 'No odometer reading found'];
+});
+   
   }
 
   @override
@@ -160,9 +154,8 @@ class _DetailScreenState extends State<DetailScreen> {
                           child: CustomPaint(
                             foregroundPainter: TextDetectorPainter(
                               _imageSize!,
-                              _elements,
-                              _elementsTag
-                            ),
+                              _elements
+                             ),
                             child: AspectRatio(
                               aspectRatio: _imageSize!.aspectRatio,
                               child: Image.file(
@@ -264,11 +257,10 @@ Padding(
 // Helps in painting the bounding boxes around the recognized
 // email addresses in the picture
 class TextDetectorPainter extends CustomPainter {
-  TextDetectorPainter(this.absoluteImageSize, this.elements, this.elementType);
+  TextDetectorPainter(this.absoluteImageSize, this.elements);
 
   final Size absoluteImageSize;
   final List<TextElement> elements;
-  final List<String> elementType;
 
   @override
   void paint(Canvas canvas, Size size) {
@@ -286,11 +278,11 @@ class TextDetectorPainter extends CustomPainter {
 
     final Paint paint = Paint()
       ..style = PaintingStyle.stroke
-      ..color = Colors.red
+      ..color = Colors.blue
       ..strokeWidth = 2.0;
     int i=0;
     for (TextElement element in elements) {
-      canvas.drawRect(scaleRect(element), getPaint(elementType.elementAt(i)));
+      canvas.drawRect(scaleRect(element), paint );
       i++;
     }
   }
@@ -306,4 +298,11 @@ class TextDetectorPainter extends CustomPainter {
   bool shouldRepaint(TextDetectorPainter oldDelegate) {
     return true;
   }
+}
+
+    bool isNumeric(String s) {
+ if (s == null) {
+   return false;
+ }
+ return double.tryParse(s) != null;
 }
