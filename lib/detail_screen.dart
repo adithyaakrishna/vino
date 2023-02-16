@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'dart:collection';
 import 'dart:io';
 
 import 'package:flutter/material.dart';
@@ -22,6 +23,8 @@ class _DetailScreenState extends State<DetailScreen> {
   late final TextDetector _textDetector;
   Size? _imageSize;
   List<TextElement> _elements = [];
+  List<String> _elementsTag=[];
+
 
   List<String>? _listRecogTexts;
 
@@ -55,34 +58,32 @@ class _DetailScreenState extends State<DetailScreen> {
     final text = await _textDetector.processImage(inputImage);
 
     // Pattern of RegExp for matching a general VIN Number
-    String vinPattern = r"\b[(A-H|J-N|P|R-Z|0-9)]{17}\b";
-    String vinPattern2 = r"[A-HJ-NPR-Z0-9]{17}";
-    String vinPattern3 = r"[a-zA-Z0-9]{9}[a-zA-Z0-9-]{2}[0-9]{6}";
     String odoPattern = r"/\b\d{6}\b/g";
     String odoPattern2 = r"^[0-9]{5,6}$";
-
-    RegExp regEx = RegExp(vinPattern);
-    RegExp regEx2 = RegExp(vinPattern2);
-    RegExp regEx3 = RegExp(vinPattern3);
     RegExp regEx4 = RegExp(odoPattern);
     RegExp regEx5 = RegExp(odoPattern2);
 
     List<String> textStrings = [];
+    
+
+    List<String> emailStrings = [];
+
+      
+
 
     // Finding and storing the text String(s) and the TextElement(s)
     for (TextBlock block in text.textBlocks) {
-      for (TextLine line in block.textLines) {
+      for (TextLine line in block.textLines) {  
         print('text: ${line.lineText}');
-          if (regEx5.hasMatch(line.lineText) ||
-              // regEx4.hasMatch(line.lineText) ||
-              // regEx3.hasMatch(line.lineText) ||
-              regEx.hasMatch(line.lineText) ||
-            regEx2.hasMatch(line.lineText)
-          ) {
-            textStrings.add(line.lineText);
+          emailStrings.add(line.lineText);
           for (TextElement element in line.textElements) {
             _elements.add(element);
-          }
+            if(regEx5.hasMatch(element.getText)){
+              _elementsTag.add("odo");
+            }
+            else{
+              _elementsTag.add("Normal");
+            }
         }
       }
     }
@@ -97,7 +98,9 @@ class _DetailScreenState extends State<DetailScreen> {
     _imagePath = widget.imagePath;
     // Initializing the text detector
     _textDetector = GoogleMlKit.vision.textDetector();
-    _recognizeEmails();
+    Timer(Duration(seconds: 3), () {
+      _recognizeEmails();
+});
     super.initState();
   }
 
@@ -158,6 +161,7 @@ class _DetailScreenState extends State<DetailScreen> {
                             foregroundPainter: TextDetectorPainter(
                               _imageSize!,
                               _elements,
+                              _elementsTag
                             ),
                             child: AspectRatio(
                               aspectRatio: _imageSize!.aspectRatio,
@@ -260,10 +264,11 @@ Padding(
 // Helps in painting the bounding boxes around the recognized
 // email addresses in the picture
 class TextDetectorPainter extends CustomPainter {
-  TextDetectorPainter(this.absoluteImageSize, this.elements);
+  TextDetectorPainter(this.absoluteImageSize, this.elements, this.elementType);
 
   final Size absoluteImageSize;
   final List<TextElement> elements;
+  final List<String> elementType;
 
   @override
   void paint(Canvas canvas, Size size) {
@@ -283,10 +288,18 @@ class TextDetectorPainter extends CustomPainter {
       ..style = PaintingStyle.stroke
       ..color = Colors.red
       ..strokeWidth = 2.0;
-
+    int i=0;
     for (TextElement element in elements) {
-      canvas.drawRect(scaleRect(element), paint);
+      canvas.drawRect(scaleRect(element), getPaint(elementType.elementAt(i)));
+      i++;
     }
+  }
+
+  Paint getPaint(String type){
+   return Paint()
+      ..style = PaintingStyle.stroke
+      ..color = type=="normal"? Colors.green: Colors.blue
+      ..strokeWidth = 2.0;
   }
 
   @override
