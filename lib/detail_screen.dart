@@ -75,10 +75,10 @@ class _DetailScreenState extends State<DetailScreen> {
     for (TextBlock block in text.textBlocks) {
       for (TextLine line in block.textLines) {  
         print('text: ${line.lineText}');
-          emailStrings.add(line.lineText);
+         textStrings.add(line.lineText);
           for (TextElement element in line.textElements) {
             _elements.add(element);
-            if(regEx5.hasMatch(element.getText)){
+            if(regEx5.hasMatch(element.getText) || regEx4.hasMatch(element.getText)){
               _elementsTag.add("odo");
             }
             else{
