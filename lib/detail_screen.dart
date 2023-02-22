@@ -58,27 +58,24 @@ class _DetailScreenState extends State<DetailScreen> {
     String vinPattern = r"\b[(A-H|J-N|P|R-Z|0-9)]{17}\b";
     String vinPattern2 = r"[A-HJ-NPR-Z0-9]{17}";
     String vinPattern3 = r"[a-zA-Z0-9]{9}[a-zA-Z0-9-]{2}[0-9]{6}";
-    String odoPattern = r"/\b\d{6}\b/g";
-    String odoPattern2 = r"^[0-9]{5,6}$";
+    String vinPattern4 = r"\b[(A-H|J-N|P|R-Z|0-9)]{17}\b";
+    String vinPattern5 = r"^(?=.*[0-9])(?=.*[A-z])[0-9A-z-]{17}$";
+    // String odoPattern = r"/\b\d{6}\b/g";
+    // String odoPattern2 = r"^[0-9]$|^[1-9][0-9]$|^(999999)$";
 
     RegExp regEx = RegExp(vinPattern);
     RegExp regEx2 = RegExp(vinPattern2);
     RegExp regEx3 = RegExp(vinPattern3);
-    RegExp regEx4 = RegExp(odoPattern);
-    RegExp regEx5 = RegExp(odoPattern2);
+    RegExp regEx4 = RegExp(vinPattern4);
+    RegExp regEx5 = RegExp(vinPattern5);
 
     List<String> textStrings = [];
+
 
     // Finding and storing the text String(s) and the TextElement(s)
     for (TextBlock block in text.textBlocks) {
       for (TextLine line in block.textLines) {
-        print('text: ${line.lineText}');
-          if (regEx5.hasMatch(line.lineText) ||
-              // regEx4.hasMatch(line.lineText) ||
-              // regEx3.hasMatch(line.lineText) ||
-              regEx.hasMatch(line.lineText) ||
-            regEx2.hasMatch(line.lineText)
-          ) {
+          if (regEx5.hasMatch(line.lineText) || regEx3.hasMatch(line.lineText) || regEx2.hasMatch(line.lineText) || regEx.hasMatch(line.lineText) || regEx4.hasMatch(line.lineText)) {
             textStrings.add(line.lineText);
           for (TextElement element in line.textElements) {
             _elements.add(element);

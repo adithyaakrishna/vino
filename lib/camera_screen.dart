@@ -82,7 +82,7 @@ class _CameraScreenState extends State<CameraScreen> {
         backgroundColor: Colors.white,
         elevation: 2.0,
         title:      
-      Text('NSMV OdoRecog', textAlign: TextAlign.center, style: TextStyle(
+      Text('NSMV VinRecog', textAlign: TextAlign.center, style: TextStyle(
         color: Color.fromRGBO(42, 47, 45, 1),
         fontFamily: 'Poppins',
         fontSize: 16,
